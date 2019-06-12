@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CoreCodeCamp.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -20,8 +21,15 @@ namespace CoreCodeCamp.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var results = await _repository.GetAllCampsAsync();
-            return Ok(results);
+            try
+            {
+                var results = await _repository.GetAllCampsAsync();
+                return Ok(results);
+            }
+            catch(Exception)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "DB faild");
+            }
         }
     }
 }
