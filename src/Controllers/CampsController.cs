@@ -2,18 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CoreCodeCamp.Data;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CoreCodeCamp.Controllers
 {
-   [Route("api")]
+   [Route("api/camps")]
    public class CampsController : ControllerBase
     {
-        public object Get()
+        private readonly ICampRepository _repository;
+        public CampsController(ICampRepository repository)
         {
-            return new { Moniker = "ATL2019", Name = "Code Camp" };
+            _repository = repository;
+        }
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var results = await _repository.GetAllCampsAsync();
+            return Ok(results);
         }
     }
 }
